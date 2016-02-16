@@ -98,7 +98,6 @@
 	        type: 'post',
 	        data: { _method: 'delete', id: id },
 	        success: function () {
-	          console.log("message deleted");
 	          _todos = _todos.filter(function (obj) {
 	            return obj.id !== id;
 	          });
@@ -108,8 +107,20 @@
 	  },
 	
 	  toggleDone: function (id) {
-	    var truthy = _todos[id].done;
-	    $.patch("api/todos/" + id, { todo: { done: !truthy } });
+	    var truthy = _todos.filter(function (obj) {
+	      return obj.id === id;
+	    })[0].done;
+	    $.ajax({
+	      url: "/api/todos/" + id,
+	      type: 'post',
+	      data: { _method: 'patch', id: id, todo: { done: !truthy } },
+	      success: function () {
+	        _todos.forEach(function (todo) {
+	          if (todo.id === id) {
+	            todo.done = !truthy;
+	          }
+	        });
+	      } });
 	    this.changed();
 	  }
 	
