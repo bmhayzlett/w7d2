@@ -53,4 +53,11 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  namespace :api do
+    resources :todos, only: [:index, :show, :create, :destroy]
+    patch '/todos/:id', to: 'todos#update'
+  end
+
+  root to: 'static_pages#root'
 end
