@@ -27,17 +27,16 @@ var TodoStore = {
   fetch: function () {
     $.get( "api/todos", function (data) {
       _todos = data;
+      TodoStore.changed();
     } );
-    this.changed();
   },
 
   create: function(todo) {
     $.post("api/todos", todo).done(
       function(data) {
         _todos[data.id] = data;
+        TodoStore.changed();
       });
-
-    this.changed();
   },
 
   destroy: function(id) {
@@ -48,8 +47,8 @@ var TodoStore = {
         data: {_method: 'delete', id: id},
         success: function() {
           _todos = _todos.filter(function(obj) {return obj.id !== id;});
+          TodoStore.changed();
         }});
-      this.changed();
     }
   },
 
@@ -65,11 +64,9 @@ var TodoStore = {
             todo.done = !truthy;
           }
         });
-
+        TodoStore.changed();
       }});
-    this.changed();
   }
-
 };
 
 
